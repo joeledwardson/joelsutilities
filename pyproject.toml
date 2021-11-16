@@ -1,8 +1,21 @@
 [tool.poetry]
 name = "joelutilities"
 version = "0.1.0"
-description = ""
-authors = ["not-relevant-is-it <joel.edwardson1@gmail.com>"]
+description = "Collection of utility functions and classes"
+authors = ["joeledwardson <joel.edwardson1@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/joeledwardson/joelsutilities"
+repository = "https://github.com/joeledwardson/joelsutilities"
+keywords = ["python", "utilities", "dash", "schema"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+include = [
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -11,6 +24,7 @@ pydantic = "^1.8.2"
 jsonpickle = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
