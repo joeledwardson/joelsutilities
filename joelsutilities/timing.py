@@ -1,12 +1,12 @@
 import functools
 import time
-from datetime import timedelta
-import loggingutilities
+from datetime import timedelta, datetime
 import pandas as pd
 from typing import List, Dict, Callable, Any, TypedDict, Optional
 import logging
-from .exceptions import TimingException
 import copy
+from . import loggingutilities
+from .exceptions import TimingException
 
 
 active_logger = logging.getLogger(__name__)
@@ -151,3 +151,6 @@ class TimingRegistrar:
                 result[k] = v
         return result
 
+
+def ms_to_datetime(timestamp_ms):
+    return datetime.fromtimestamp(float(timestamp_ms)/1000)

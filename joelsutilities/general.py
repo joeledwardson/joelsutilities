@@ -7,34 +7,6 @@ from typing import List
 import functools
 
 
-def dgetattr(obj, name, is_dict=False):
-    """
-    get deep attribute
-    operates the same as getattr(obj, name) but can use '.' for nested attributes
-    e.g. dgetattr(my_object, 'a.b') would return value of my_object.a.b
-    """
-    atr = dict.__getitem__ if is_dict else getattr
-    names = name.split('.')
-    names = [obj] + names
-    return functools.reduce(atr, names)
-
-
-def dattr_name(deep_attr):
-    """
-    get deep attribute name
-    e.g. dattr_name('my_object.a.b') would return 'b'
-    """
-    return re.match(r'(.*[.])?(.*)', deep_attr).groups()[1]
-
-
-def ms_to_datetime(timestamp_ms):
-    return datetime.datetime.fromtimestamp(float(timestamp_ms)/1000)
-
-
-def object_members(o):
-    return [k for k in o.__dir__() if not re.match('^_', k) and not callable(getattr(o, k))]
-
-
 def prettified_members(o, indent=4):
     """deep object with all members printed for dicts/classes"""
 

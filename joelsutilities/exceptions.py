@@ -1,30 +1,34 @@
-class MyUtilsException(Exception):
+class UtilsException(Exception):
     pass
 
 
-class RegistrarException(MyUtilsException):
+class RegistrarException(UtilsException):
     pass
 
 
-class StateMachineException(MyUtilsException):
+class StateMachineException(UtilsException):
     pass
 
 
-class TimingException(MyUtilsException):
+class TimingException(UtilsException):
     pass
 
 
-class DictException(MyUtilsException):
+class DictException(UtilsException):
     pass
 
 
-class DateTimeException(MyUtilsException):
+class FilesException(UtilsException):
     pass
 
 
-class DashUtilsException(MyUtilsException):
+class DateTimeException(UtilsException):
     pass
 
 
-class LayoutException(MyUtilsException):
+class DashUtilsException(UtilsException):
+    pass
+
+
+class LayoutException(UtilsException):
     pass

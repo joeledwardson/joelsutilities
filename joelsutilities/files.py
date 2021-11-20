@@ -1,18 +1,16 @@
 import os
 import re
 from os import path
-from typing import Dict
-
+from typing import Dict, List
 import yaml
+from .exceptions import FilesException
 
-from myutils.exceptions import DictException
 
-
-def get_filepaths(target_path, file_pattern=None, dir_pattern=None):
+def get_filepaths(target_path, file_pattern=None, dir_pattern=None) -> List[str]:
     """
-    get complete list of full file paths with a 'target_path' directory
-    Can specify an optional 'file_pattern' regex to only match certain file names
-    Can specify an optional 'dir_pattern' regex to match certain directory names
+    get complete list of full file paths with a 'target_path' directory (does not search sub-directories)
+    Can specify an optional 'file_pattern' regex to only match file name
+    Can specify an optional 'dir_pattern' regex to match path excluding file name
     """
 
     files = []
@@ -34,11 +32,11 @@ def load_yaml_confs(cfg_dir: str) -> Dict:
     """get list of .yaml configs in a dictionary, key is file name, value is dict"""
     # check directory is set
     if type(cfg_dir) is not str:
-        raise DictException(f'directory "{cfg_dir}" is not a string')
+        raise FilesException(f'directory "{cfg_dir}" is not a string')
 
     # check actually exists
     if not path.isdir(cfg_dir):
-        raise DictException(f'directory "{cfg_dir}" does not exist!')
+        raise FilesException(f'directory "{cfg_dir}" does not exist!')
 
     # dict of configs to return
     configs = dict()

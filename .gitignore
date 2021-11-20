@@ -1,2 +1,4 @@
-.idea
+.idea/
 poetry.lock
+.pytest_cache/
+__pycache__/
