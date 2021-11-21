@@ -1,10 +1,5 @@
-import time
-import dates
-import re
 import json
 import jsonpickle
-from typing import List
-import functools
 
 
 def prettified_members(o, indent=4):
@@ -50,12 +45,3 @@ def constructor_verify(value, object_type) -> bool:
         return False
 
 
-def is_jsonable(x):
-    """
-    determine if data can be serialized
-    """
-    try:
-        json.dumps(x)
-        return True
-    except (TypeError, OverflowError):
-        return False
