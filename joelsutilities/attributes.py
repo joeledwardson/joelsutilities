@@ -2,7 +2,6 @@ from typing import Any, List
 import functools
 import re
 
-# SAMPLE COMMENT
 
 def dgetattr(obj: object, name: str, is_dict=False) -> Any:
     """
