@@ -1,11 +1,10 @@
 import queue
-import loggingutilities
 from enum import Enum
 from typing import Dict, List
+import logging
 from .exceptions import StateMachineException
 
 active_logger = logging.getLogger(__name__)
-active_logger.setLevel(logging.INFO)
 
 
 class State:
