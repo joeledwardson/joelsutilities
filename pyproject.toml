@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "joelutilities"
+name = "joelsutilities"
 version = "0.1.0"
 description = "Collection of utility functions and classes"
 authors = ["joeledwardson <joel.edwardson1@gmail.com>"]
