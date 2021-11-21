@@ -5,7 +5,7 @@ import pandas as pd
 from typing import List, Dict, Callable, Any, TypedDict, Optional
 import logging
 import copy
-from . import loggingutilities
+from . import loggingutils
 from .exceptions import TimingException
 
 

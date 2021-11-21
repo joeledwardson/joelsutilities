@@ -2,6 +2,14 @@ class UtilsException(Exception):
     pass
 
 
+class SchemaException(UtilsException):
+    pass
+
+
+class NumericException(UtilsException):
+    pass
+
+
 class RegistrarException(UtilsException):
     pass
 

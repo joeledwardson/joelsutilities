@@ -1,15 +1,11 @@
+from .exceptions import SchemaException
 import dataclasses
-import typing
 from typing import Dict, Any, List, TypedDict, Optional, Type
 import inspect
 import pydantic
 from pydantic import BaseModel, create_model, schema
 
 OBJ_CLASS_KEY = "_obj_class_identifier_key"
-
-
-class SchemaException(Exception):
-    pass
 
 
 def get_definitions(spec: Dict) -> Dict[str, Dict]:
@@ -44,6 +40,7 @@ class ClassModel(pydantic.BaseModel):
     Config = Config
     # pass
 
+
 def dc(cls: type):
     """Pydantic dataclass decorator with custom configuration and auto update forward references"""
     cls = pydantic.dataclasses.dataclass(config=Config)(cls)
@@ -51,8 +48,18 @@ def dc(cls: type):
     return cls
 
 
+# TODO - read docstring to provide description for parameters
 def get_inheritance_args(c: type) -> Dict[str, inspect.Parameter]:
-    """get dictionary of arguments from class' initialisation function"""
+    """
+    get dictionary of arguments from class' initialisation function
+    e.g.
+    class A:
+        def __init__(self, a: int, b: str):
+            pass
+    get_inheritance_args(A)
+    =>
+    {"a": <parameter>, "b": <parameter>}
+    """
     args = {}
     # loop class type and all inherited classes
     for x in c.__mro__:
@@ -89,11 +96,15 @@ def create_cls_model(
 ):
     ignore_args = ignore_args or list()
     type_overrides = type_overrides or dict()
+
     class _BaseModel(BaseModel):
         __doc__ = cls.__doc__
         Config = Config
     spec = get_inheritance_args(cls)
-    replace_empty = lambda p, v: v if p == inspect.Parameter.empty else p
+
+    def replace_empty(p, v):
+        return v if p == inspect.Parameter.empty else p
+
     args = {
         k: (
             type_overrides[k]["annotation"],
@@ -106,7 +117,6 @@ def create_cls_model(
         if k not in ignore_args
     }
     return create_model(cls.__name__, **args, __base__=_BaseModel)
-
 
 
 def create_pyd_model(spec: ClassModelSpec):
