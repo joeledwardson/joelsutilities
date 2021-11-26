@@ -12,15 +12,15 @@ def test_inheritance_args():
 
     class B(A):
         def __init__(self, c: int):
-            super.__init__(1, '2')
+            super().__init__(1, '2')
+
     # *args and **kwargs not passed so shouldn't process parent classes
     assert get_keys(B) == ['c']
 
     class C(A):
         def __init__(self, d: int, **kwargs):
-            super.__init__(kwargs)
+            super().__init__(**kwargs)
+
     # init args should be from defined class + parent classes
     assert get_keys(C) == ['d', 'a', 'b']
 
-
-def test_cls_model():
