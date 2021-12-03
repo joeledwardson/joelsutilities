@@ -25,6 +25,7 @@ jsonpickle = "^2.0.0"
 PyYAML = "^6.0"
 pyfakefs = "^4.5.3"
 pylint = "^2.11.1"
+dash = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
