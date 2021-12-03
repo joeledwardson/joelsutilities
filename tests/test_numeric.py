@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 
 
+# TODO - use pytest.mark.parametrize
 def test_closest_value():
     assert numeric.closest_index(np.array([]), 1) == -1
     with pytest.raises(numeric.NumericException):
