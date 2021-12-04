@@ -23,4 +23,3 @@ def test_inheritance_args():
 
     # init args should be from defined class + parent classes
     assert get_keys(C) == ['d', 'a', 'b']
-

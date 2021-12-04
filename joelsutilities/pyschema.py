@@ -1,38 +1,41 @@
-from .exceptions import SchemaException
 import dataclasses
-from typing import Dict, Any, List, TypedDict, Optional, Type
 import inspect
+from typing import Any, Dict, List, Optional, Type, TypedDict
+
 import pydantic
-from pydantic import BaseModel, create_model, schema
+from pydantic import BaseModel, create_model
+
+from .exceptions import SchemaException
 
 OBJ_CLASS_KEY = "_obj_class_identifier_key"
 
 
 def get_definitions(spec: Dict) -> Dict[str, Dict]:
-    return spec.get('definitions') or spec.get('$defs') or {}
+    return spec.get("definitions") or spec.get("$defs") or {}
 
 
 class Config(pydantic.BaseConfig):
     underscore_attrs_are_private = True
-    extra = 'forbid'
+    extra = "forbid"
     arbitrary_types_allowed = True
     validate_assignment = False
     validate_all = False
     orm_mode = True
+
     @staticmethod
     def schema_extra(schema: Dict[str, Any], model) -> None:
-        required = ['name'] + (['kwargs'] if len(schema.get('required', [])) else [])
-        propNames = ['properties', 'additionalProperties', 'required']
+        required = ["name"] + (["kwargs"] if len(schema.get("required", [])) else [])
+        propNames = ["properties", "additionalProperties", "required"]
         kwargsDict = {nm: schema.pop(nm) for nm in propNames if nm in schema}
 
         schema["additionalProperties"] = False
-        schema['isClassDefinition'] = True
+        schema["isClassDefinition"] = True
         schema["required"] = required
-        schema['properties'] = {
-            'name': {
-                'const': model.__name__,
+        schema["properties"] = {
+            "name": {
+                "const": model.__name__,
             },
-            'kwargs': kwargsDict
+            "kwargs": kwargsDict,
         }
 
 
@@ -63,11 +66,17 @@ def get_inheritance_args(c: type) -> Dict[str, inspect.Parameter]:
     args = {}
     # loop class type and all inherited classes
     for x in c.__mro__:
-        if '__init__' in x.__dict__:
+        if "__init__" in x.__dict__:
             spec = inspect.getfullargspec(x)
             sig = inspect.signature(x)
             # put parameters into dictionary only if they are not *args or **kwargs
-            args.update({k: v for k, v in sig.parameters.items() if k != spec.varargs and k != spec.varkw})
+            args.update(
+                {
+                    k: v
+                    for k, v in sig.parameters.items()
+                    if k != spec.varargs and k != spec.varkw
+                }
+            )
             # check if *args or **kwargs parameter exists - if not, infer no inheritance class processing is needed
             if not spec.varargs and not spec.varkw:
                 break
@@ -90,9 +99,9 @@ def create_dataclass_model(cls: type):
 
 
 def create_cls_model(
-        cls: type,
-        ignore_args: Optional[List[str]] = None,
-        type_overrides: Optional[Dict[str, TypeOverride]] = None
+    cls: type,
+    ignore_args: Optional[List[str]] = None,
+    type_overrides: Optional[Dict[str, TypeOverride]] = None,
 ):
     ignore_args = ignore_args or list()
     type_overrides = type_overrides or dict()
@@ -100,18 +109,18 @@ def create_cls_model(
     class _BaseModel(BaseModel):
         __doc__ = cls.__doc__
         Config = Config
+
     spec = get_inheritance_args(cls)
 
     def replace_empty(p, v):
         return v if p == inspect.Parameter.empty else p
 
     args = {
-        k: (
-            type_overrides[k]["annotation"],
-            type_overrides[k]["default"]
-        ) if k in type_overrides else (
+        k: (type_overrides[k]["annotation"], type_overrides[k]["default"])
+        if k in type_overrides
+        else (
             replace_empty(p.annotation, Any),
-            replace_empty(p.default, ...)
+            replace_empty(p.default, ...),
         )  # parameters without defaults are "required" and ellipsis means required in Pydantic
         for k, p in spec.items()
         if k not in ignore_args
@@ -120,8 +129,8 @@ def create_cls_model(
 
 
 def create_pyd_model(spec: ClassModelSpec):
-    if dataclasses.is_dataclass(spec['cls']):
-        return create_dataclass_model(spec['cls'])
+    if dataclasses.is_dataclass(spec["cls"]):
+        return create_dataclass_model(spec["cls"])
     else:
         return create_cls_model(**spec)
 
@@ -129,16 +138,20 @@ def create_pyd_model(spec: ClassModelSpec):
 def type_to_schema(T: Type[Any]) -> Dict[str, Any]:
     class DummyModel(pydantic.BaseModel):
         var: T
+
     updated = DummyModel.schema()["properties"]["var"]
     updated.pop("title")
     return updated
 
 
-def override_schema_type(property_chain: List[str], new_type: Type[Any], receivers: List[str], schema: Dict):
+def override_schema_type(
+    property_chain: List[str], new_type: Type[Any], receivers: List[str], schema: Dict
+):
     if not len(property_chain):
-        raise SchemaException(f'expected at least 1 element in `property_chain`')
+        raise SchemaException('expected at least 1 element in "property_chain"')
 
     updated = type_to_schema(new_type)
+
     def update_property(spec: Dict, _property_chain: List[str]):
         props = spec.get("properties", {})
         prop_name = _property_chain.pop(0)
@@ -154,14 +167,11 @@ def override_schema_type(property_chain: List[str], new_type: Type[Any], receive
             update_property(d, property_chain.copy())
 
 
-def mdl_schema(
-        topSpec: ClassModelSpec,
-        classes: List[ClassModelSpec]
-):
+def mdl_schema(topSpec: ClassModelSpec, classes: List[ClassModelSpec]):
     topModel = create_pyd_model(topSpec)
     cls_models = dict()
     for c in classes:
-        cls_models[c['cls'].__name__] = create_pyd_model(c)
+        cls_models[c["cls"].__name__] = create_pyd_model(c)
     locals().update(cls_models)
     for m in cls_models.values():
         m.update_forward_refs()
@@ -170,9 +180,10 @@ def mdl_schema(
 
 
 def class_to_schema(
-        cls: type,
-        ignore_args: Optional[List[str]] = None,
-        type_overrides: Optional[Dict[str, TypeOverride]] = None) -> Dict[str, any]:
+    cls: type,
+    ignore_args: Optional[List[str]] = None,
+    type_overrides: Optional[Dict[str, TypeOverride]] = None,
+) -> Dict[str, any]:
     """get schema from class using pydantic"""
     ignore_args = ignore_args or list()
     type_overrides = type_overrides or dict()
@@ -182,14 +193,16 @@ def class_to_schema(
         Config = Config
 
     spec = get_inheritance_args(cls)
-    replace_empty = lambda p, v: v if p == inspect.Parameter.empty else p
+
+    def replace_empty(p, v):
+        return v if p == inspect.Parameter.empty else p
+
     args = {
-        k: (
-            type_overrides[k]["annotation"],
-            type_overrides[k]["default"]
-        ) if k in type_overrides else (
+        k: (type_overrides[k]["annotation"], type_overrides[k]["default"])
+        if k in type_overrides
+        else (
             replace_empty(p.annotation, Any),
-            replace_empty(p.default, ...)
+            replace_empty(p.default, ...),
         )  # parameters without defaults are "required" and ellipsis means required in Pydantic
         for k, p in spec.items()
         if k not in ignore_args
@@ -207,7 +220,10 @@ def is_class(cls_def: Dict) -> bool:
     - JSON schema object can be differentiated as a python class object and not Dict using "additionalProperties"
     - "additionalProperties" is False for classes but is {type: <dictionary type here>} for dicts
     """
-    return cls_def.get("type") == "object" and cls_def.get("additionalProperties", None) == False
+    return (
+        cls_def.get("type") == "object"
+        and cls_def.get("additionalProperties", None) is False
+    )
 
 
 def class_process(cls_def: Dict, cls_name: str):
@@ -218,12 +234,10 @@ def class_process(cls_def: Dict, cls_name: str):
     """
     properties = cls_def.get("properties", dict())
     if OBJ_CLASS_KEY in properties:
-        raise SchemaException(f'property "{cls_name}" already has object key "{OBJ_CLASS_KEY}"')
-    properties = {
-         OBJ_CLASS_KEY: {
-             "const": cls_name
-         }
-     } | properties
+        raise SchemaException(
+            f'property "{cls_name}" already has object key "{OBJ_CLASS_KEY}"'
+        )
+    properties = {OBJ_CLASS_KEY: {"const": cls_name}} | properties
     cls_def["properties"] = properties
     # add class definition key to required properties
     cls_def["required"] = [OBJ_CLASS_KEY] + cls_def.get("required", list())

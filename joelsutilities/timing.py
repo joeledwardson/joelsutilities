@@ -1,13 +1,10 @@
 import functools
-import time
-from datetime import timedelta, datetime
-import pandas as pd
-from typing import List, Dict, Callable, Any, TypedDict, Optional
 import logging
-import copy
-from . import loggingutils
-from .exceptions import TimingException
+import time
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List, Optional, TypedDict
 
+import pandas as pd
 
 active_logger = logging.getLogger(__name__)
 
@@ -29,8 +26,10 @@ class TimingRegistrar:
             self._function_timings[name] = []
         self._function_timings[name].append(timedelta(seconds=elapsed_seconds))
 
-    def _call(self, f: Callable,  key: str, *args, **kwargs) -> Any:
-        start_time = time.perf_counter()  # gets timestamp in seconds (with decimal places)
+    def _call(self, f: Callable, key: str, *args, **kwargs) -> Any:
+        start_time = (
+            time.perf_counter()
+        )  # gets timestamp in seconds (with decimal places)
         val = f(*args, **kwargs)  # execute function and store output
         end_time = time.perf_counter()
         elapsed_time = end_time - start_time  # compute time for function execution
@@ -55,13 +54,16 @@ class TimingRegistrar:
                 # some stuff
 
         """
+
         def outer(method: Callable):
             @functools.wraps(method)
             def inner(_self, *args, **kwargs):
                 # use object name with method name for key
-                key = getattr(_self, name_attr) + '.' + method.__name__
+                key = getattr(_self, name_attr) + "." + method.__name__
                 return self._call(method, key, _self, *args, **kwargs)
+
             return inner
+
         return outer
 
     def register_method(self, func: Callable) -> Callable:
@@ -75,10 +77,12 @@ class TimingRegistrar:
             def hello(self):
                 # do some stuff
         """
+
         @functools.wraps(func)
         def inner(_self, *args, **kwargs):
-            key = _self.__class__.__name__ + '.' + func.__name__
+            key = _self.__class__.__name__ + "." + func.__name__
             return self._call(inner, key, _self, *args, **kwargs)
+
         return inner
 
     def register_function(self, func: Callable) -> Callable:
@@ -91,9 +95,11 @@ class TimingRegistrar:
         def hello():
             # do some stuff
         """
+
         @functools.wraps(func)
         def inner(*args, **kwargs):
             return self._call(func, func.__name__, *args, **kwargs)
+
         return inner
 
     def _series(self, func_name: str) -> pd.Series:
@@ -124,7 +130,9 @@ class TimingRegistrar:
                 mean=sum(v, timedelta()) / len(v),
                 min=min(v),
                 max=max(v),
-            ) for k, v in self._function_timings.items() if v
+            )
+            for k, v in self._function_timings.items()
+            if v
         ]
 
     def clear(self) -> None:
@@ -135,10 +143,13 @@ class TimingRegistrar:
 
     def items(self):
         return self._function_timings.items()
+
     def __contains__(self, item):
         return self._function_timings.__contains__(item)
+
     def __setitem__(self, key, value):
         return self._function_timings.__setitem__(key, value)
+
     def __getitem__(self, item):
         return self._function_timings.__getitem__(item)
 
@@ -153,4 +164,4 @@ class TimingRegistrar:
 
 
 def ms_to_datetime(timestamp_ms):
-    return datetime.fromtimestamp(float(timestamp_ms)/1000)
+    return datetime.fromtimestamp(float(timestamp_ms) / 1000)

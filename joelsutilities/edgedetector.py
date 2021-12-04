@@ -2,6 +2,7 @@ class EdgeDetector:
     """
     detect when a boolean value changes from True to False and vice-versa comparing to previous-state value
     """
+
     def __init__(self, initial_value: bool):
         self._value: bool = initial_value
         self._previous: bool = initial_value

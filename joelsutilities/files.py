@@ -2,7 +2,9 @@ import os
 import re
 from os import path
 from typing import Dict, List
+
 import yaml
+
 from .exceptions import FilesException
 
 
@@ -31,7 +33,7 @@ def get_filepaths(target_path, file_pattern=None, dir_pattern=None) -> List[str]
 def load_yaml_confs(cfg_dir: str) -> Dict:
     """get list of .yaml configs in a dictionary, key is file name, value is dict"""
     # check directory is set
-    if type(cfg_dir) is not str:
+    if not isinstance(cfg_dir, str):
         raise FilesException(f'directory "{cfg_dir}" is not a string')
 
     # check actually exists
@@ -50,7 +52,7 @@ def load_yaml_confs(cfg_dir: str) -> Dict:
         # get file path and name without ext
         file_path = path.join(cfg_dir, file_name)
         name, ext = path.splitext(file_name)
-        if ext != '.yaml':
+        if ext != ".yaml":
             continue
 
         with open(file_path) as f:

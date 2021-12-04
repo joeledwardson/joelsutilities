@@ -19,4 +19,3 @@ def test_date_formatting():
 
 def test_localise():
     assert dates.localise(datetime.now()).tzinfo == datetime.now(pytz.timezone('Europe/London')).tzinfo
-

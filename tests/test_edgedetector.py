@@ -20,4 +20,3 @@ def test_edge_detector():
     e.update(False)
     assert e.rising is False
     assert e.falling is False
-

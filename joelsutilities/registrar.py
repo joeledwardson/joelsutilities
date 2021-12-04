@@ -1,7 +1,8 @@
-from typing import Generic, TypeVar, Dict, Callable
+from typing import Dict, Generic, TypeVar
+
 from .exceptions import RegistrarException
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Registrar(Generic[T]):
@@ -12,8 +13,10 @@ class Registrar(Generic[T]):
         """
         register an element using a defined name, add to dictionary of elements
         """
+
         def inner(obj):
             return self._reg_element(name=name, obj=obj)
+
         return inner
 
     def register_element(self, obj: T) -> T:
@@ -24,7 +27,9 @@ class Registrar(Generic[T]):
 
     def _reg_element(self, name: str, obj: T) -> T:
         if name in self._reg:
-            raise RegistrarException(f'registering object "{obj.__name__}", but already exists!')
+            raise RegistrarException(
+                f'registering object "{obj.__name__}", but already exists!'
+            )
         else:
             self._reg[name] = obj
             return obj

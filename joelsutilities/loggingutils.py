@@ -1,6 +1,6 @@
 import logging
+from logging import Handler
 from queue import Queue
-from logging import Handler, getLogger, root, StreamHandler
 
 
 class QueueHandler(Handler):
@@ -10,18 +10,18 @@ class QueueHandler(Handler):
 
     def emit(self, record):
         try:
-            self.handler_queue.put({
-                'record': record,
-                'txt': self.format(record)
-            })
+            self.handler_queue.put({"record": record, "txt": self.format(record)})
         except Exception:
             self.handleError(record)
 
 
-def create_dual_logger(name, file_name,
-                       file_log_level=logging.DEBUG,
-                       stream_log_level=logging.INFO,
-                       file_reset=False):
+def create_dual_logger(
+    name,
+    file_name,
+    file_log_level=logging.DEBUG,
+    stream_log_level=logging.INFO,
+    file_reset=False,
+):
     """
     create a dual logger with a stream and file handlers
     - name: name of logger
@@ -44,9 +44,9 @@ def create_dual_logger(name, file_name,
 
     # create formatter
     log_formatter = logging.Formatter(
-        fmt='{asctime} - {name} - {levelname:8} - {message}',
-        datefmt='%d-%b-%y %H:%M:%S',
-        style='{'
+        fmt="{asctime} - {name} - {levelname:8} - {message}",
+        datefmt="%d-%b-%y %H:%M:%S",
+        style="{",
     )
 
     # streaming - create handler
@@ -59,7 +59,7 @@ def create_dual_logger(name, file_name,
     stream_handler.setLevel(stream_log_level)
 
     # file - create handler
-    file_handler = logging.FileHandler(file_name, mode='w' if file_reset else 'a')
+    file_handler = logging.FileHandler(file_name, mode="w" if file_reset else "a")
 
     # file - assign formatter
     file_handler.setFormatter(log_formatter)
@@ -72,7 +72,7 @@ def create_dual_logger(name, file_name,
     my_logger.addHandler(file_handler)
 
     # print initiation message
-    my_logger.info(f'Logger {name} starting...')
+    my_logger.info(f"Logger {name} starting...")
 
     return my_logger
 

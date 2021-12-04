@@ -1,7 +1,8 @@
+import logging
 import queue
 from enum import Enum
 from typing import Dict, List
-import logging
+
 from .exceptions import StateMachineException
 
 active_logger = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ class StateMachine:
         run state machine with `kwargs` dictionary repeatedly until no state change is detected
         """
 
-        while 1:
+        while True:
 
             if self.is_state_change:
                 self.states[self.current_state_key].enter(**kwargs)
@@ -53,7 +54,7 @@ class StateMachine:
 
             ret = self.states[self.current_state_key].run(**kwargs)
 
-            if type(ret) == list:
+            if isinstance(ret, list):
                 # list returned, add all to queue
                 for s in ret:
                     self.state_queue.put(s)
@@ -70,21 +71,24 @@ class StateMachine:
                 # returned value implies state change (True, list of states, or single new state)
                 if not self.state_queue.qsize():
                     # state has returned true when nothing in queue! (this shouldn't happen)
-                    raise StateMachineException('state machine queue has no size')
+                    raise StateMachineException("state machine queue has no size")
                 # get next state from queue
                 self.current_state_key = self.state_queue.get()
             else:
                 # unrecognized return type
-                raise StateMachineException(f'return value "{ret}" in state machine not recognised')
+                raise StateMachineException(
+                    f'return value "{ret}" in state machine not recognised'
+                )
 
             self.is_state_change = self.previous_state_key != self.current_state_key
             if self.is_state_change:
                 # new state is different to current, process change and repeat loop
-                self.process_state_change(self.previous_state_key, self.current_state_key, **kwargs)
+                self.process_state_change(
+                    self.previous_state_key, self.current_state_key, **kwargs
+                )
             else:
                 # exit loop if no state change
                 break
 
     def process_state_change(self, old_state, new_state, **kwargs):
         pass
-

@@ -24,5 +24,3 @@ def test_timing_registrar():
 
     assert t0 >= 0.09
     assert t1 >= 0.19
-
-

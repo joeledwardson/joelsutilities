@@ -25,7 +25,7 @@ def test_dict_subset():
         {}
     )
     f(
-        {'a': {'b':2}},
+        {'a': {'b': 2}},
         {'a': {'b': 3}}
     )
     t(
@@ -33,7 +33,8 @@ def test_dict_subset():
         {'a': {'b': {'c': 1, 'd': 2}}}
     )
 
+
 def test_dict_update():
-    x = {'a': 1, 'b':2}
+    x = {'a': 1, 'b': 2}
     dictionaries.dict_update({'b': {'c': 1}}, x)
     assert x == {'a': 1, 'b': {'c': 1}}

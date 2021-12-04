@@ -1,6 +1,7 @@
-from typing import Iterable, Dict
 import copy
 from collections.abc import Mapping
+from typing import Dict, Iterable
+
 from .exceptions import DictException
 
 
@@ -10,13 +11,17 @@ def validate_config(cfg: Dict, cfg_spec: Dict):
     for k, spec in cfg_spec.items():
         exist = k in _cfg
         val = _cfg.pop(k, None)
-        if not spec.get('optional'):
+        if not spec.get("optional"):
             if not exist:
-                raise DictException(f'expected key "{k}" in configuration dict as per config spec: "{cfg_spec}"')
+                raise DictException(
+                    f'expected key "{k}" in configuration dict as per config spec: "{cfg_spec}"'
+                )
         if exist:
             # if 'type' in spec:
-            if not isinstance(val, spec['type']):
-                raise DictException(f'expected key "{k}" value to be type "{spec["type"]}", got "{type(val)}"')
+            if not isinstance(val, spec["type"]):
+                raise DictException(
+                    f'expected key "{k}" value to be type "{spec["type"]}", got "{type(val)}"'
+                )
     if _cfg:
         raise DictException(f'configuration dictionary has unexpected values: "{_cfg}"')
 
@@ -31,7 +36,7 @@ def is_dict_subset(inner: dict, outer: dict):
     for k, v in inner.items():
         if k not in outer:
             return False
-        elif all(hasattr(v, a) for a in ['items', '__getitem__', '__contains__']):
+        elif all(hasattr(v, a) for a in ["items", "__getitem__", "__contains__"]):
             if not isinstance(outer[k], Iterable):
                 return False
             elif not is_dict_subset(v, outer[k]):
@@ -46,7 +51,7 @@ def dict_update(updates: Mapping, base_dict: Mapping):
 
     for k, v in updates.items():
 
-        if type(v) is not dict:
+        if not isinstance(v, dict):
             # value is not dict
             base_dict[k] = v
             continue

@@ -1,5 +1,7 @@
 import time
+
 from dates import datetime, timedelta
+
 from .exceptions import TimingException
 
 
@@ -9,6 +11,7 @@ class Timer:
     keeps track of total time elapsed whilst stopping and starting
     must not try to stop when already stopped, or start when already started
     """
+
     def __init__(self):
         self._running: bool = False
         self._start_time: float = 0
@@ -16,21 +19,21 @@ class Timer:
 
     def start(self):
         if self._running is True:
-            raise TimingException('Tried to start timer when already running')
+            raise TimingException("Tried to start timer when already running")
 
         self._running = True
         self._start_time = time.perf_counter()
 
     def stop(self):
         if self._running is False:
-            raise TimingException('Tried to stop timer when already running')
+            raise TimingException("Tried to stop timer when already running")
 
         self._running = False
-        self._elapsed_time += (time.perf_counter() - self._start_time)
+        self._elapsed_time += time.perf_counter() - self._start_time
 
     def reset(self):
         if self._running is True:
-            raise TimingException('Tried to reset timer when running')
+            raise TimingException("Tried to reset timer when running")
 
         self._elapsed_time = 0.0
 
