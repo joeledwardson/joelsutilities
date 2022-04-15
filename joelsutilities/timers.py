@@ -18,6 +18,7 @@ class Timer:
         self._elapsed_time: float = 0
 
     def start(self):
+        """start timer"""
         if self._running is True:
             raise TimingException("Tried to start timer when already running")
 
@@ -25,6 +26,7 @@ class Timer:
         self._start_time = time.perf_counter()
 
     def stop(self):
+        """stop timer"""
         if self._running is False:
             raise TimingException("Tried to stop timer when already running")
 
@@ -32,6 +34,8 @@ class Timer:
         self._elapsed_time += time.perf_counter() - self._start_time
 
     def reset(self):
+        """reset elapsed time
+        timer must be stopped"""
         if self._running is True:
             raise TimingException("Tried to reset timer when running")
 

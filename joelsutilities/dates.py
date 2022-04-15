@@ -42,11 +42,11 @@ def localise(
 
 
 def today(tz=None) -> datetime:
-    """get datetime of today (no time info)"""
+    """get datetime of today"""
     now = datetime.now(tz)
     return datetime(year=now.year, month=now.month, day=now.day)
 
 
 def tomorrow(tz=None) -> datetime:
-    """get datetime of tomorrow (no time info)"""
+    """get datetime of tomorrow"""
     return today(tz) + timedelta(days=1)

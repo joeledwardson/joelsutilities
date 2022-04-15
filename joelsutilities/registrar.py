@@ -21,7 +21,7 @@ class Registrar(Generic[T]):
 
     def register_element(self, obj: T) -> T:
         """
-        register an element, add to dictionary of elements
+        register an element using its `__name__` attribute, add to dictionary of elements
         """
         return self._reg_element(name=obj.__name__, obj=obj)
 

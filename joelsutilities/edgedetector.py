@@ -22,9 +22,9 @@ class EdgeDetector:
         return self._value
 
     @property
-    def rising(self):
+    def rising(self) -> bool:
         return self._rising
 
     @property
-    def falling(self):
+    def falling(self) -> bool:
         return self._falling
