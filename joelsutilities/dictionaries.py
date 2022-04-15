@@ -5,26 +5,6 @@ from typing import Dict, Iterable
 from .exceptions import DictException
 
 
-# TODO - remove
-def validate_config(cfg: Dict, cfg_spec: Dict):
-    _cfg = copy.deepcopy(cfg)
-    for k, spec in cfg_spec.items():
-        exist = k in _cfg
-        val = _cfg.pop(k, None)
-        if not spec.get("optional"):
-            if not exist:
-                raise DictException(
-                    f'expected key "{k}" in configuration dict as per config spec: "{cfg_spec}"'
-                )
-        if exist:
-            # if 'type' in spec:
-            if not isinstance(val, spec["type"]):
-                raise DictException(
-                    f'expected key "{k}" value to be type "{spec["type"]}", got "{type(val)}"'
-                )
-    if _cfg:
-        raise DictException(f'configuration dictionary has unexpected values: "{_cfg}"')
-
 
 def is_dict_subset(inner: dict, outer: dict):
     """
