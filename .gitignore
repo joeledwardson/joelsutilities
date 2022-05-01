@@ -3,3 +3,6 @@ poetry.lock
 .pytest_cache/
 __pycache__/
 .coverage
+docs/_build
+docs/api
+.vscode/
