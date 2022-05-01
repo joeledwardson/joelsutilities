@@ -19,6 +19,13 @@ def format_timedelta(td: timedelta, fmt: str = "{h:02}:{m:02}:{s:02}") -> str:
     - s: seconds
     - ms: milliseconds
     - u: microseconds
+    
+    >>> format_timedelta(timedelta(seconds=30, minutes=20))
+    "00:30:20"
+    >>> format_timedelta(timedelta(days=2, hours=3), '{d} days')
+    "2 days"
+    >>> format_timedelta(timedelta(days=2, hours=3, minutes=4, seconds=5, milliseconds=6), '{d} days {h:02}:{m:02}:{s:02}:{ms:03}')
+    "2 days 03:04:05:006"
     """
     s = td.total_seconds()
     formatters = {

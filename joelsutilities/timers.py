@@ -1,7 +1,5 @@
 import time
-
-from dates import datetime, timedelta
-
+from datetime import datetime, timedelta
 from .exceptions import TimingException
 
 
