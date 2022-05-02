@@ -1,7 +1,7 @@
 import logging
 import queue
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from .exceptions import StateMachineException
 
@@ -12,7 +12,7 @@ class State:
     def enter(self, **inputs):
         pass
 
-    def run(self, **inputs):
+    def run(self, **inputs) -> Union[Enum, bool, None, List[Enum]]:
         raise NotImplementedError
 
 
