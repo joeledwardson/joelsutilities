@@ -9,21 +9,57 @@ active_logger = logging.getLogger(__name__)
 
 
 class State:
+    """Base state class used with :ref:`State.run <_staterun>`
+    
+    
+    .. _state:
+    
+    """
+    
     def enter(self, **inputs):
+        """function called when transitioning from another state
+        function not called on subsequent `run`s once state is entered
+        """
         pass
 
     def run(self, **inputs) -> Union[Enum, bool, None, List[Enum]]:
+        """execute state actions
+        
+        
+        .. _staterun:
+        
+
+        :raises NotImplementedError: function must be defined
+        :return: `Enum` for the next state, or `list` of `Enum`s for list of next states, `False` or `None` to remain in current state, `True` to continue to next state in list
+        :rtype: Union[Enum, bool, None, List[Enum]]
+        """        
         raise NotImplementedError
 
 
+
+# TODO - this should be broken up into individual building blocks
 class StateMachine:
+    """Handle state execution, magenement and transition
+    
+    
+    .. _statemachine:
+    
+    
+    """
     def __init__(self, states: Dict[Enum, State], initial_state: Enum):
+        """
+        :param states: map of `Enum` to `State`
+        :type states: Dict[Enum, State]
+        :param initial_state: first key to use
+        :type initial_state: Enum
+        """
         self.states: Dict[Enum, State] = states
         self.current_state_key: Enum = initial_state
         self.previous_state_key: Enum = initial_state
         self.initial_state_key: Enum = initial_state
         self.is_state_change: bool = True
         self.state_queue = queue.Queue()
+
 
     def flush(self):
         """
@@ -39,6 +75,8 @@ class StateMachine:
             self.state_queue.put(state_key)
         self.current_state_key = self.state_queue.get()
         self.is_state_change = True
+
+
 
     def run(self, **kwargs):
         """
