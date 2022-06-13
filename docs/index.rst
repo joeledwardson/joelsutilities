@@ -8,13 +8,20 @@ Joelsutilities Documentation
 
 A collection of utility modules for functions and classes of repeated usage.
 
+To install the latest released version of joelsutilities::
+
+  $ pip install joelsutilities
+
+Or, using poetry::
+
+  $ poetry add joelsutilities
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    
    api
-
-
 
 
 Indices
