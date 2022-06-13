@@ -3,26 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to joelsutilities's documentation!
-==========================================
+Joelsutilities Documentation
+============================
 
 A collection of utility modules for functions and classes of repeated usage.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   
+   api
 
 
-.. automodule:: joelsutilities
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :imported-members:
 
 
-Indices and tables
-==================
+Indices
+=======
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
