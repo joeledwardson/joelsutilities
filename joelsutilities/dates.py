@@ -52,6 +52,10 @@ def localise(dt: datetime, tz_from: Union[DstTzInfo, StaticTzInfo] = pytz.UTC, t
     :param _type_ tz_to: timzone to convert to, defaults to pytz.timezone("Europe/London")
     :raises DateTimeException: expects datetime to be naive
     :return datetime: timezone aware datetime
+    
+    
+    >>> localise(datetime.now()).tzinfo == datetime.now(pytz.timezone('Europe/London')).tzinfo
+    True
     """    
     if dt.tzinfo:
         raise DateTimeException("expected datetime to be naive")
