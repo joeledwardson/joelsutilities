@@ -81,11 +81,15 @@ class TimingRegistrar:
 
 
 def ms_to_datetime(timestamp_ms: Union[int, float]) -> datetime:
-    """convert millisecond timestamp to datetime
+    """convert millisecond timestamp to datetime in UTC
 
     :param timestamp_ms: milliseconds timestamp since epoch
     :type timestamp_ms: Union[int, float]
     :return: datetime object
     :rtype: datetime
+    
+    
+    >>> ms_to_datetime(0) == datetime(1970, 1, 1) # epoch is 1st jan 1970
+    True
     """
-    return datetime.fromtimestamp(float(timestamp_ms) / 1000)
+    return datetime.utcfromtimestamp(float(timestamp_ms) / 1000)
