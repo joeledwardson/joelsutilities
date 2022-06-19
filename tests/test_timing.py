@@ -15,7 +15,7 @@ def test_timing_registrar():
     sample_func(0.2)
 
     # check function exists in registrar and 2 instances exist
-    assert 'sample_func' in reg.timed_functions()
+    assert 'sample_func' in reg.timings
     assert len(reg['sample_func']) == 2
 
     # check timings are correct
