@@ -2,6 +2,8 @@ class EdgeDetector:
     """
     detect when a boolean value changes from True to False and vice-versa comparing to previous-state value
     
+    >>> EdgeDetector(True).current_value
+    True
     >>> detector.update(True)
     >>> detector.update(False)
     >>> detector.rising
@@ -15,7 +17,9 @@ class EdgeDetector:
     False
     >>> detector.update(True)
     >>> detector.rising
-    False    
+    False
+    >>> detector.current_value
+    True    
     """
 
     def __init__(self, initial_value: bool):
