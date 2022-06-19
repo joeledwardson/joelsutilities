@@ -12,7 +12,7 @@ jobs:
       with:
         poetry-version: "1.1.13"
     - name: export requirements.txt
-      run: poetry export --without-hashes --dev --output requirements.txt
+      run: poetry export --without-hashes --dev --output docs/requirements.txt
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
