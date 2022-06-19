@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: setup poetry
+      uses: abatilo/actions-poetry@v2.0.0
+    - name: export requirements.txt
+      run: poetry export --without-hashes --dev --output requirements.txt
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
