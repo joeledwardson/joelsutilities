@@ -6,13 +6,18 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: "3.9.9"
     - uses: actions/checkout@v1
     - name: setup poetry
       uses: abatilo/actions-poetry@v2.0.0
       with:
         poetry-version: "1.1.13"
-    - name: export requirements.txt
-      run: poetry export --without-hashes --dev --output docs/requirements.txt
-    - uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: "docs/"
+    - name: build docs
+      run: poetry run sphinx-build docs docs/_build/html
+    # - name: export requirements.txt
+    #   run: poetry export --without-hashes --dev --output docs/requirements.txt
+    # - uses: ammaraskar/sphinx-action@master
+    #   with:
+    #     docs-folder: "docs/"
