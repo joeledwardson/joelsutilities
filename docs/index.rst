@@ -8,6 +8,9 @@ Joelsutilities Documentation
 
 A collection of utility modules for functions and classes of repeated usage.
 
+
+Installation
+============
 To install the latest released version of joelsutilities::
 
   $ pip install joelsutilities
@@ -15,6 +18,20 @@ To install the latest released version of joelsutilities::
 Or, using poetry::
 
   $ poetry add joelsutilities
+
+
+Documentation
+=============
+
+View the `full documentation here <https://joelsutilities.readthedocs.io/en/latest/>` for more detailed information.
+
+
+Usage
+=====
+
+An example of the `Registrar` class::
+
+  pls = 1
 
 
 .. toctree::
